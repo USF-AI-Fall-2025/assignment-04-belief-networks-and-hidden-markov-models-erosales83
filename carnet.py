@@ -66,6 +66,27 @@ car_model.add_cpds( cpd_starts, cpd_ignition, cpd_gas, cpd_radio, cpd_battery, c
 
 car_infer = VariableElimination(car_model)
 
-print(car_infer.query(variables=["Moves"],evidence={"Radio":"turns on", "Starts":"yes"}))
+# print(car_infer.query(variables=["Moves"],evidence={"Radio":"turns on", "Starts":"yes"}))
+
+def main():
+
+    query_one = car_infer.query()
+    print(query_one)
+    query_two = car_infer.query()
+    print(query_two)
+    query_three_a = car_infer.query()
+    print(query_three_a)
+    query_three_b = car_infer.query()
+    print(query_three_b)
+    query_four_a = car_infer.query()
+    print(query_four_a)
+    query_four_b = car_infer.query()
+    print(query_four_b)
+    query_five = car_infer.query()
+    print(query_five)
+
+
+if __name__ == "__main__":
+    main()
 
 
