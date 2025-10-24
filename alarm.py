@@ -50,11 +50,24 @@ cpd_marycalls = TabularCPD(
 alarm_model.add_cpds(
     cpd_burglary, cpd_earthquake, cpd_alarm, cpd_johncalls, cpd_marycalls)
 
-alarm_infer = VariableElimination(alarm_model)
+#alarm_infer = VariableElimination(alarm_model)
 
 #print(alarm_infer.query(variables=["JohnCalls"],evidence={"Earthquake":"yes"}))
-#
+
 #the probability of Mary Calling given that John called
 
-q = alarm_infer.query(variables=["Alarm", "Burglary"],evidence={"MaryCalls":"yes"})
-print(q)
+# q = alarm_infer.query(variables=["Alarm", "Burglary"],evidence={"MaryCalls":"yes"})
+# print(q)
+
+def main():
+    alarm_infer = VariableElimination(alarm_model)
+
+    query_one = alarm_infer.query()
+    print(query_one)
+    query_two = alarm_infer.query()
+    print(query_two)
+    query_three = alarm_infer.query()
+    print(query_three)
+
+if __name__ == "__main__":
+    main()
