@@ -1,8 +1,8 @@
-from pgmpy.models import BayesianNetwork
+from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.inference import VariableElimination
 from pgmpy.factors.discrete import TabularCPD
 
-car_model = BayesianNetwork(
+car_model = DiscreteBayesianNetwork(
     [
         ("Battery", "Radio"),
         ("Battery", "Ignition"),
@@ -70,19 +70,19 @@ car_infer = VariableElimination(car_model)
 
 def main():
 
-    query_one = car_infer.query()
+    query_one = car_infer.query(variables= ["Battery"], evidence={"Moves": "no"})
     print(query_one)
-    query_two = car_infer.query()
+    query_two = car_infer.query(variables=["Starts"], evidence={"Radio": "Doesn't turn on"})
     print(query_two)
-    query_three_a = car_infer.query()
+    query_three_a = car_infer.query(variables=["Radio"], evidence={"Battery": "Works"})
+    query_three_b = car_infer.query(variables=["Radio"], evidence={"Battery": "Works", "Gas": "Full"})
     print(query_three_a)
-    query_three_b = car_infer.query()
     print(query_three_b)
-    query_four_a = car_infer.query()
+    query_four_a = car_infer.query(variables=["Ignition"], evidence={"Moves": "no"})
+    query_four_b = car_infer.query(variables=["Ignition"], evidence={"Moves": "no", "Gas": "Empty"})
     print(query_four_a)
-    query_four_b = car_infer.query()
     print(query_four_b)
-    query_five = car_infer.query()
+    query_five = car_infer.query(variables=["Starts"], evidence={"Radio": "turns on", "Gas": "Full"})
     print(query_five)
 
 
