@@ -43,11 +43,13 @@ cpd_ignition = TabularCPD(
                  "Battery": ['Works',"Doesn't work"]}
 )
 
-cpd_key = TabularCPD(
-    variable= "KeyPresent", variable_card=2,
-    values= [[0.7],[0.3]],
-    state_names={"KeyPresent": ["yes", "no"]},
-
+cpd_starts = TabularCPD(
+    variable="Starts",
+    variable_card=2,
+    values=[[0.99, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01], [0.01, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99]],
+    evidence=["Ignition", "Gas", "KeyPresent"],
+    evidence_card=[2, 2, 2],
+    state_names={"Starts":['yes','no'], "Ignition":["Works", "Doesn't work"], "Gas":['Full',"Empty"], "KeyPresent": ["yes", "no"]},
 )
 
 cpd_starts = TabularCPD(
