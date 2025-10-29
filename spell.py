@@ -64,13 +64,13 @@ def transition_probs(data):
     return tr_probs
 
 def viterbi(word, states, start_probs, trans_probs, emit_probs):
-    V = [{}]
+    viterbi_ = [{}]
     path = {}
     for state in states:
-        V[0][state] = start_probs.get(state, 0.01) * emit_probs.get(state, {}).get(word[0], 0.01)
+        viterbi_[0][state] = start_probs.get(state, 0.01) * emit_probs.get(state, {}).get(word[0], 0.01)
         path[state] = [state]
     for t in range(1, len(word)):
-        V.append({})
+        viterbi_.append({})
         new_path = {}
         for curr in states:
             emit_p = emit_probs.get(curr, {}).get(word[t], 0.01)
@@ -78,18 +78,18 @@ def viterbi(word, states, start_probs, trans_probs, emit_probs):
             best_prob = 0
             for prev in states:
                 trans_p = trans_probs.get(prev, {}).get(curr, 0.01)
-                prob = V[t-1][prev] * trans_p * emit_p
+                prob = viterbi_[t-1][prev] * trans_p * emit_p
                 if prob > best_prob:
                     best_prob = prob
                     best_prev = prev
-            V[t][curr] = best_prob
+            viterbi_[t][curr] = best_prob
             new_path[curr] = path[best_prev] + [curr]
         path = new_path
     last_state = None
     max_prob = 0
     for state in states:
-        if V[-1][state] > max_prob:
-            max_prob = V[-1][state]
+        if viterbi_[-1][state] > max_prob:
+            max_prob = viterbi_[-1][state]
             last_state = state
     return ''.join(path[last_state])
 
@@ -114,7 +114,6 @@ def main():
                 corrected_word = viterbi(word, states, start_probs, tr_probs, em_probs)
                 corrected_words.append(corrected_word)
         print("Correct text: " + ' '.join(corrected_words))
-
 
 if __name__ == "__main__":
     main()
