@@ -19,19 +19,16 @@ def emission_probs(data):
         for c, t in zip(correct, typed):
             em_counts.setdefault(c, {})
             em_counts[c][t] = em_counts[c].get(t, 0) + 1
-
     # Testing Purposes
     # print("Emission counts:")
     # for c, t_counts in em_counts.items():
     #     print(f"{c}: {t_counts}")
-
     em_probs = {}
     for c, t_counts in em_counts.items():
         total = sum(t_counts.values())
         em_probs[c] = {}
         for t, v in t_counts.items():
             em_probs[c][t] = v / total
-
     # Testing Purposes
     # print("Emission probabilities:")
     # for c, t_counts in em_probs.items():
@@ -41,14 +38,34 @@ def emission_probs(data):
 
 def transition_probs(data):
     tr_counts = {}
+    for correct, _ in data:
+        letters = ["<s>"] + list(correct) + ["</s>"]
+        for a, b in zip(letters, letters[1:]):
+            tr_counts.setdefault(a, {})
+            tr_counts[a][b] = tr_counts[a].get(b, 0) + 1
+    # Testing Purposes
+    # print("Transition counts:")
+    # for a, b_counts in tr_counts.items():
+    #     print(a, b_counts)
+    alphabet = list(string.ascii_lowercase) + ["</s>"]
     tr_probs = {}
+    for a, b_counts in tr_counts.items():
+        total = sum(b_counts.values()) + len(alphabet)
+        tr_probs[a] = {}
+        for b in alphabet:
+            count_b = b_counts.get(b, 0)
+            smoothed_count = count_b + 1
+            probability = smoothed_count / total
+            tr_probs[a][b] = probability
+    # Testing Purposes
+    # print("Transition probabilities:")
+    # for a, b_counts in tr_probs.items():
+    #     print(a, {b: round(p, 4) for b, p in b_counts.items()})
     return tr_probs
 
 def viterbi(word, states, start_probs, trans_probs, emit_probs):
     V = [{}]
     path = {}
-    return correct_word
-
 
 def main():
     data = load_data("aspell.txt")
