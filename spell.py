@@ -54,9 +54,9 @@ def transition_probs(data):
         tr_probs[a] = {}
         for b in alphabet:
             count_b = b_counts.get(b, 0)
-            smoothed_count = count_b + 1
-            probability = smoothed_count / total
-            tr_probs[a][b] = probability
+            add_count = count_b + 1
+            probs = add_count / total
+            tr_probs[a][b] = probs
     # Testing Purposes
     # print("Transition probabilities:")
     # for a, b_counts in tr_probs.items():
@@ -66,6 +66,32 @@ def transition_probs(data):
 def viterbi(word, states, start_probs, trans_probs, emit_probs):
     V = [{}]
     path = {}
+    for state in states:
+        V[0][state] = start_probs.get(state, 0.01) * emit_probs.get(state, {}).get(word[0], 0.01)
+        path[state] = [state]
+    for t in range(1, len(word)):
+        V.append({})
+        new_path = {}
+        for curr in states:
+            emit_p = emit_probs.get(curr, {}).get(word[t], 0.01)
+            best_prev = None
+            best_prob = 0
+            for prev in states:
+                trans_p = trans_probs.get(prev, {}).get(curr, 0.01)
+                prob = V[t-1][prev] * trans_p * emit_p
+                if prob > best_prob:
+                    best_prob = prob
+                    best_prev = prev
+            V[t][curr] = best_prob
+            new_path[curr] = path[best_prev] + [curr]
+        path = new_path
+    last_state = None
+    max_prob = 0
+    for state in states:
+        if V[-1][state] > max_prob:
+            max_prob = V[-1][state]
+            last_state = state
+    return ''.join(path[last_state])
 
 def main():
     data = load_data("aspell.txt")
