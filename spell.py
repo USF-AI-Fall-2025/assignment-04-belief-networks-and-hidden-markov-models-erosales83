@@ -1,4 +1,3 @@
-import math
 import string
 
 #Opens aspell.txt and loads data
